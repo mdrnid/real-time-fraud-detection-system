@@ -6,82 +6,82 @@
 ![Docker](https://img.shields.io/badge/Docker-Enabled-blue.svg)
 ![ONNX](https://img.shields.io/badge/ML-ONNX_Inference-orange.svg)
 
-An end-to-end Machine Learning solution for detecting fraudulent credit card transactions in real-time. This system features a high-performance **FastAPI** backend using **XGBoost (via ONNX)** and a modern **Streamlit** dashboard for monitoring and manual transaction checks.
+A high-performance, end-to-end Machine Learning solution for detecting fraudulent credit card transactions in real-time. This system utilizes a **FastAPI** backend optimized with **ONNX Runtime** for lightning-fast inference and a modern **Streamlit** dashboard for monitoring and manual simulation.
 
-## 🚀 Fitur Utama
+## 🚀 Key Features
 
-- **Real-time Inference:** Prediksi instan menggunakan ONNX Runtime untuk latensi minimal.
-- **Robust Preprocessing:** Menggunakan `RobustScaler` untuk menangani outlier pada data transaksi finansial.
-- **Modern Dashboard:** UI interaktif untuk simulasi input transaksi 28 fitur PCA & Amount.
-- **Microservices Ready:** Terbagi menjadi layanan Backend API dan Frontend UI.
-- **Containerized:** Deployment mudah menggunakan Docker & Docker Compose.
-- **Automated Testing:** Dilengkapi dengan unit & integration tests menggunakan Pytest.
+- **Real-time Inference:** Instant predictions using an XGBoost model converted to ONNX for minimal latency.
+- **Robust Preprocessing:** Implements `RobustScaler` to handle outliers common in financial transaction data.
+- **Interactive Dashboard:** Modern UI for simulating transactions with 28 PCA-transformed features and amount input.
+- **Microservices Architecture:** Decoupled Backend API and Frontend UI services.
+- **Containerized Deployment:** Seamless setup and scaling using Docker & Docker Compose.
+- **Automated Quality Assurance:** Includes integration and unit tests powered by Pytest.
 
-## 🏗️ Arsitektur Teknologi
+## 🏗️ Technology Stack
 
 - **Backend:** FastAPI (Python)
 - **Frontend:** Streamlit
-- **ML Engine:** XGBoost (dikonversi ke format ONNX)
-- **Inference:** ONNX Runtime
-- **Containerization:** Docker & Docker Compose
-- **Data Validation:** Pydantic
+- **ML Engine:** XGBoost (Distributed via ONNX)
+- **Inference Runtime:** ONNX Runtime
+- **DevOps:** Docker & Docker Compose
+- **Data Handling:** Pydantic & NumPy
 
-## 🛠️ Instalasi & Penggunaan
+## 🛠️ Installation & Setup
 
-### Menggunakan Docker (Rekomendasi)
+### Dockerized Setup (Recommended)
 
-Pastikan Docker & Docker Compose sudah terinstal di sistem Anda.
+Ensure you have Docker and Docker Compose installed.
 
-1. Clone repository:
+1. Clone the repository:
    ```bash
-   git clone https://github.com/USERNAME/REPO_NAME.git
-   cd REPO_NAME
+   git clone https://github.com/mdrnid/real-time-fraud-detection-system.git
+   cd real-time-fraud-detection-system
    ```
 
-2. Jalankan sistem:
+2. Launch the services:
    ```bash
    docker-compose up --build
    ```
 
-3. Akses aplikasi:
-   - **Frontend:** `http://localhost:8501`
-   - **Backend API Docs:** `http://localhost:8000/docs`
+3. Access the applications:
+   - **Frontend UI:** `http://localhost:8501`
+   - **Interactive API Docs:** `http://localhost:8000/docs`
 
-### Instalasi Lokal
+### Local Development Setup
 
-1. Persiapkan Virtual Environment:
+1. Create a Virtual Environment:
    ```bash
    python -m venv venv
-   source venv/bin/activate  # atau venv\Scripts\activate di Windows
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-2. Instal dependencies:
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Jalankan Backend (FastAPI):
+3. Start the Backend (FastAPI):
    ```bash
    uvicorn src.main:app --host 0.0.0.0 --port 8000
    ```
 
-4. Jalankan Frontend (Streamlit) di terminal baru:
+4. Start the Frontend (Streamlit) in a separate terminal:
    ```bash
    streamlit run src/streamlit_app.py
    ```
 
-## 🧠 Detail ML Model
+## 🧠 Machine Learning Overview
 
-Model dilatih menggunakan dataset transaksi kartu kredit dengan fokus pada **XGBoost Classifier**. Untuk memastikan performa produksi yang optimal, model diekspor ke format **ONNX**. Preprocessing fitur 'Amount' dilakukan menggunakan **RobustScaler** untuk meminimalkan dampak dari nilai transaksi yang ekstrem (outliers).
+The system is powered by an **XGBoost Classifier** trained on a credit card fraud dataset sourced from **Kaggle** (Credit Card Fraud Detection 2023). To ensure production-grade performance, the model is served via **ONNX**, enabling sub-millisecond inference. Feature engineering includes **Robust Scaling** for highly skewed transaction amounts, ensuring the model remains accurate even with extreme outliers.
 
-## 📊 Dokumentasi API
+## 📊 API Documentation
 
-- `POST /predict_transaction`: Menerima 28 fitur PCA dan nominal transaksi. Mengembalikan label (FRAUD/NORMAL) beserta skor kepercayaan (confidence).
-- `GET /`: Health check untuk memastikan servis aktif.
+- `POST /predict_transaction`: Accepts 28 PCA features and transaction amount. Returns the prediction (FRAUD/NORMAL) and a confidence score.
+- `GET /`: Health check endpoint to verify service status.
 
-## 📜 Lisensi
+## 📜 License
 
-Proyek ini berada di bawah lisensi MIT. Lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-*Dibuat oleh [Nama Anda/GitHub Username]*
+*Developed by [mdrnid](https://github.com/mdrnid)*
