@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: fraud-detection-api
+    ports:
+      - "8000:8000"
+    restart: always
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: fraud-detection-ui
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000/predict_transaction
+    depends_on:
+      - api
+    restart: always
