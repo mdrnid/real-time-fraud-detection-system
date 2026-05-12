@@ -3,34 +3,42 @@
 ![Python](https://img.shields.io/badge/Python-3.10-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-green.svg)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.25.0-red.svg)
+![Redis](https://img.shields.io/badge/Redis-Latest-red.svg)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-blue.svg)
 ![ONNX](https://img.shields.io/badge/ML-ONNX_Inference-orange.svg)
 
-A high-performance, end-to-end Machine Learning solution for detecting fraudulent credit card transactions in real-time. This system utilizes a **FastAPI** backend optimized with **ONNX Runtime** for lightning-fast inference and a modern **Streamlit** dashboard for monitoring and manual simulation.
+A high-performance, end-to-end Machine Learning solution for detecting fraudulent credit card transactions in real-time. This system features a robust **Streaming Pipeline** using Redis and a dedicated Worker node for high-throughput fraud analytics.
+
+## 🏗️ System Architecture
+
+The project has evolved from a simple request-response API to a distributed streaming architecture:
+
+1.  **Producer:** Simulates a live stream of transactions from a CSV dataset, pushing payloads into a **Redis Queue**.
+2.  **Message Broker (Redis):** Acts as a high-speed buffer to handle transaction bursts.
+3.  **Worker Node:** Consumes transactions from Redis, runs **ONNX-optimized XGBoost inference**, and persists results to **SQLite**.
+4.  **Live Dashboard:** A minimalist, professional Streamlit console that monitors the database and visualizes fraud metrics in real-time.
 
 ## 🚀 Key Features
 
-- **Real-time Inference:** Instant predictions using an XGBoost model converted to ONNX for minimal latency.
-- **Robust Preprocessing:** Implements `RobustScaler` to handle outliers common in financial transaction data.
-- **Interactive Dashboard:** Modern UI for simulating transactions with 28 PCA-transformed features and amount input.
-- **Microservices Architecture:** Decoupled Backend API and Frontend UI services.
-- **Containerized Deployment:** Seamless setup and scaling using Docker & Docker Compose.
-- **Automated Quality Assurance:** Includes integration and unit tests powered by Pytest.
+-   **Asynchronous Streaming:** Decoupled data ingestion and processing for high scalability.
+-   **ONNX Optimization:** Model inference is served via ONNX Runtime for sub-millisecond latency.
+-   **Real-time Monitoring:** Automated dashboard refresh providing instant visibility into system throughput and fraud rates.
+-   **Dual-Mode Analysis:** Supports both autonomous stream monitoring and manual transaction auditing.
+-   **Containerized Orchestration:** Full infrastructure (API, UI, Redis) managed via Docker Compose.
 
-## 🏗️ Technology Stack
+## 🛠️ Technology Stack
 
-- **Backend:** FastAPI (Python)
-- **Frontend:** Streamlit
-- **ML Engine:** XGBoost (Distributed via ONNX)
-- **Inference Runtime:** ONNX Runtime
-- **DevOps:** Docker & Docker Compose
-- **Data Handling:** Pydantic & NumPy
+-   **Backend:** FastAPI (Python)
+-   **Broker:** Redis
+-   **Processing:** Python Worker (ONNX Runtime)
+-   **Frontend:** Streamlit (Minimalist Fintech UI)
+-   **ML Engine:** XGBoost (Exported to ONNX)
+-   **Database:** SQLite (Result Persistence)
+-   **DevOps:** Docker & Docker Compose
 
-## 🛠️ Installation & Setup
+## 📦 Installation & Setup
 
 ### Dockerized Setup (Recommended)
-
-Ensure you have Docker and Docker Compose installed.
 
 1. Clone the repository:
    ```bash
@@ -38,50 +46,27 @@ Ensure you have Docker and Docker Compose installed.
    cd real-time-fraud-detection-system
    ```
 
-2. Launch the services:
+2. Launch the infrastructure:
    ```bash
-   docker-compose up --build
+   docker-compose up --build -d
    ```
 
-3. Access the applications:
-   - **Frontend UI:** `http://localhost:8501`
-   - **Interactive API Docs:** `http://localhost:8000/docs`
-
-### Local Development Setup
-
-1. Create a Virtual Environment:
+3. Start the Streaming Pipeline:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   # Terminal 1: Start the Worker
+   python src/worker.py
+
+   # Terminal 2: Start the Producer (Simulated Stream)
+   python src/producer.py
    ```
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Start the Backend (FastAPI):
-   ```bash
-   uvicorn src.main:app --host 0.0.0.0 --port 8000
-   ```
-
-4. Start the Frontend (Streamlit) in a separate terminal:
-   ```bash
-   streamlit run src/streamlit_app.py
-   ```
+4. Access the applications:
+   - **Live Monitoring Dashboard:** `http://localhost:8501`
+   - **Backend API Docs:** `http://localhost:8000/docs`
 
 ## 🧠 Machine Learning Overview
 
-The system is powered by an **XGBoost Classifier** trained on a credit card fraud dataset sourced from **Kaggle** (Credit Card Fraud Detection 2023). To ensure production-grade performance, the model is served via **ONNX**, enabling sub-millisecond inference. Feature engineering includes **Robust Scaling** for highly skewed transaction amounts, ensuring the model remains accurate even with extreme outliers.
-
-## 📊 API Documentation
-
-- `POST /predict_transaction`: Accepts 28 PCA features and transaction amount. Returns the prediction (FRAUD/NORMAL) and a confidence score.
-- `GET /`: Health check endpoint to verify service status.
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The system uses an **XGBoost Classifier** trained on the Credit Card Fraud Detection 2023 dataset. The model is converted to **ONNX** to eliminate Python overhead during inference. Data is pre-processed using `RobustScaler` to ensure stability against the high variance typical of financial transactions.
 
 ---
 *Developed by [mdrnid](https://github.com/mdrnid)*
